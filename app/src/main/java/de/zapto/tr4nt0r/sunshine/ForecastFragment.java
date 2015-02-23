@@ -44,7 +44,7 @@ public class ForecastFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecastfragment, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    };
+    }
 
 
     @Override
@@ -115,14 +115,16 @@ public class ForecastFragment extends Fragment {
             final String FORMAT_PARAM = "json";
             final String UNITS_PARAM = "metric";
             final String DAYS_PARAM = "cnt";
+            final String LANG_PARAM = "lang";
 
             try {
                 Uri buildUri = Uri.parse(FORECAST_BASE_URL)
                         .buildUpon()
-                       .appendQueryParameter("q", "94043")
-                       .appendQueryParameter("mode", "json")
-                       .appendQueryParameter("units", "metric")
-                       .appendQueryParameter("cnt", "7")
+                       .appendQueryParameter(QUERY_PARAM, params[0])
+                       .appendQueryParameter(FORMAT_PARAM, "json")
+                       .appendQueryParameter(UNITS_PARAM, "metric")
+                       .appendQueryParameter(DAYS_PARAM, "7")
+                        .appendQueryParameter(LANG_PARAM, "de")
                        .build();
 
 
@@ -143,7 +145,7 @@ public class ForecastFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
