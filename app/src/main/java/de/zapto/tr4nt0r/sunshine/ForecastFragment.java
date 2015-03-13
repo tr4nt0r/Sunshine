@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +27,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,6 +36,8 @@ public class ForecastFragment extends Fragment {
 
     public ForecastFragment() {
     }
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +107,7 @@ public class ForecastFragment extends Fragment {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String forecastJsonStr = null;
+            int numDays = 7;
 
             final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
             final String QUERY_PARAM = "q";
@@ -121,7 +122,7 @@ public class ForecastFragment extends Fragment {
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, "json")
                         .appendQueryParameter(UNITS_PARAM, "metric")
-                        .appendQueryParameter(DAYS_PARAM, "7")
+                        .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                         .appendQueryParameter(LANG_PARAM, "de")
                         .build();
 
@@ -154,7 +155,7 @@ public class ForecastFragment extends Fragment {
 
                 Log.v(LOG_TAG, "Forecast JSON String " + forecastJsonStr);
 
-                return getWeatherDataFromJson(forecastJsonStr, 7);
+                return getWeatherDataFromJson(forecastJsonStr, numDays);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 return null;
@@ -182,7 +183,7 @@ public class ForecastFragment extends Fragment {
         protected void onPostExecute(String[] strings) {
             super.onPostExecute(strings);
 
-            setupListView(LayoutInflater.from(getActivity()), (ViewGroup) getView(), new ArrayList<String>(Arrays.asList(strings)));
+           // setupListView(LayoutInflater.from(getActivity()), (ViewGroup) getView(), new ArrayList<String>(Arrays.asList(strings)));
         }
     }
 
@@ -223,7 +224,7 @@ public class ForecastFragment extends Fragment {
         final String OWM_TEMPERATURE = "temp";
         final String OWM_MAX = "max";
         final String OWM_MIN = "min";
-        final String OWM_DESCRIPTION = "main";
+        final String OWM_DESCRIPTION = "description";
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
         JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
